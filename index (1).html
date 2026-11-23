@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>পাম্প পাওয়ার ক্যালকুলেটর | Pump Power Calculator</title>
+<style>
+:root{--bg:#eef3f1;--card:#fff;--ink:#14231f;--mute:#5a6e68;--ac:#0d6e5c;--line:#d3dfdb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1816;--card:#172421;--ink:#e5efec;--mute:#8aa39c;--line:#27393b;--ac:#35b39b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:16px;max-width:520px;margin-inline:auto}
+h1{font-size:20px;margin:0 0 4px}.s{color:var(--mute);font-size:14px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+label{display:block;font-size:14px;color:var(--mute);margin:12px 0 4px}
+input{width:100%;padding:12px;font:inherit;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input:focus-visible,button:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button{width:100%;margin-top:16px;padding:12px;border:0;border-radius:8px;background:var(--ac);color:#fff;font:inherit;font-weight:600}
+#out{margin-top:16px;display:none}.r{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.r:last-child{border:0}.r b{font-size:18px}
+</style></head><body>
+<h1>পাম্প পাওয়ার ক্যালকুলেটর</h1>
+<p class="s">প্রবাহ ও হেড থেকে মোটরের প্রয়োজনীয় ক্ষমতা বের করুন।</p>
+<div class="card">
+<label for="q">প্রবাহ Q (m³/h)</label><input id="q" type="number" inputmode="decimal" value="10">
+<label for="h">মোট হেড H (মিটার)</label><input id="h" type="number" inputmode="decimal" value="30">
+<label for="e">পাম্পের দক্ষতা (%)</label><input id="e" type="number" inputmode="decimal" value="60">
+<label for="m">নিরাপত্তা মার্জিন (%)</label><input id="m" type="number" inputmode="decimal" value="15">
+<button id="go">হিসাব করুন</button>
+<div id="out">
+<div class="r"><span>হাইড্রলিক পাওয়ার</span><b id="a"></b></div>
+<div class="r"><span>শ্যাফট পাওয়ার</span><b id="b"></b></div>
+<div class="r"><span>মার্জিনসহ মোটর ক্ষমতা</span><b id="c"></b></div>
+<div class="r"><span>নিকটতম স্ট্যান্ডার্ড মোটর</span><b id="d"></b></div>
+</div></div>
+<script>
+const std=[.37,.55,.75,1.1,1.5,2.2,3,3.7,5.5,7.5,11,15,18.5,22,30,37,45,55,75,90];
+const $=id=>document.getElementById(id),v=id=>parseFloat($(id).value);
+$('go').onclick=()=>{const q=v('q'),h=v('h'),e=v('e')/100,m=1+v('m')/100;
+if(!(q>0&&h>0&&e>0&&e<=1)){alert('সঠিক মান দিন (দক্ষতা ১–১০০%)');return}
+const hyd=q*h/367,sh=hyd/e,mo=sh*m,st=std.find(x=>x>=mo)||'৯০ kW এর বেশি';
+$('a').textContent=hyd.toFixed(2)+' kW';$('b').textContent=sh.toFixed(2)+' kW';
+$('c').textContent=mo.toFixed(2)+' kW';$('d').textContent=typeof st==='number'?`${st} kW (${(st*1.341).toFixed(1)} HP)`:st;
+$('out').style.display='block'};
+</script></body></html>
